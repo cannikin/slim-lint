@@ -12,7 +12,7 @@ module SlimLint
       :none   => [' ', ''],
       :any    => ['[\(\{\[]', '[\)\}\]]']
     }
-    WRAPPER_START = '\A\s*[\w\.#-]+'
+    WRAPPER_START = '\A\s*[\w\.#][\w\.#-]*'
     WRAPPER_ANY = '.*'
     WRAPPER_END = '.*\z'
     ATTRIBUTES_REGEX = Regexp.new(WRAPPER_START + '[ \(\{\[]')
