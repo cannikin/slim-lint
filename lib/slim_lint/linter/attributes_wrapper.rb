@@ -50,7 +50,7 @@ module SlimLint
                 when :any
                   'wrap attributes in either (), [] or {}'
                 else
-                  "wrap attributes in #{STYLES[style].first}#{STYLES[style].last}"
+                  "wrap attributes in #{STYLES[style].first.tr('\\', '')} and #{STYLES[style].last.tr('\\', '')}"
                 end
     end
 
