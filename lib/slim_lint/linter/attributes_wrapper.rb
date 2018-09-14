@@ -16,6 +16,7 @@ module SlimLint
     WRAPPER_ANY = '.*'
     WRAPPER_END = '.*\z'
     ATTRIBUTES_REGEX = Regexp.new(WRAPPER_START + '( .*?=|\(|\{|\[).+')
+    DOCTYPE_REGEX = Regexp.new '\Adoctype'
 
     on_start do |_sexp|
       style = config.fetch('style', 'none').to_sym
@@ -24,6 +25,9 @@ module SlimLint
       document.source_lines.each_with_index do |line, index|
         # whether the line contains any attributes at all
         next unless line =~ ATTRIBUTES_REGEX
+        # doctype declarations cannot use parenthesis
+        next if line =~ DOCTYPE_REGEX
+        # actual check for attributes wrapper
         next if line =~ line_regex(style)
 
         report_lint(dummy_node.new(index + 1), message(style))
