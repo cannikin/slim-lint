@@ -15,7 +15,7 @@ module SlimLint
     WRAPPER_START = '\A\s*[\w\.#][\w\.#-]*'
     WRAPPER_ANY = '.*'
     WRAPPER_END = '.*\z'
-    ATTRIBUTES_REGEX = Regexp.new(WRAPPER_START + '[ \(\{\[]')
+    ATTRIBUTES_REGEX = Regexp.new(WRAPPER_START + '( .*?=|\(|\{|\[).+')
 
     on_start do |_sexp|
       style = config.fetch('style', 'none').to_sym

@@ -262,7 +262,7 @@ describe SlimLint::Linter::AttributesWrapper do
           context 'attribute with no value' do
             let(:slim) { 'div data-foo' }
 
-            it { should report_lint }
+            it { should_not report_lint }
           end
 
           context 'tag with class shortcut' do
@@ -355,6 +355,12 @@ describe SlimLint::Linter::AttributesWrapper do
 
           context 'tag with class shortcut' do
             let(:slim) { 'div.foo(data-foo="bar")' }
+
+            it { should_not report_lint }
+          end
+
+          context 'attributes wrap onto the next line' do
+            let(:slim) { "div.foo(\n  data-foo='bar'\n)" }
 
             it { should_not report_lint }
           end
@@ -459,7 +465,7 @@ describe SlimLint::Linter::AttributesWrapper do
           context 'attribute with no value' do
             let(:slim) { 'div data-foo' }
 
-            it { should report_lint }
+            it { should_not report_lint }
           end
 
         end
@@ -550,7 +556,7 @@ describe SlimLint::Linter::AttributesWrapper do
           context 'attribute with no value' do
             let(:slim) { 'div data-foo' }
 
-            it { should report_lint }
+            it { should_not report_lint }
           end
 
         end
