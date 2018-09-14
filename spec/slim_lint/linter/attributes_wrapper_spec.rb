@@ -645,70 +645,202 @@ describe SlimLint::Linter::AttributesWrapper do
 
   context 'element without attributes' do
 
-    context 'element only' do
-      let(:slim) { 'div' }
+    context "when config style is 'none'" do
 
-      it { should_not report_lint }
+      let(:config) do
+        SlimLint::ConfigurationLoader.load_hash({
+          'linters' => {
+            'AttributesWrapper' => {
+              'enabled' => true,
+              'style' => 'none'
+            }
+          }
+        }).for_linter(described_class)
+      end
+
+      context 'element only' do
+        let(:slim) { 'div' }
+
+        it { should_not report_lint }
+      end
+
+      context 'element with text' do
+        let(:slim) { 'div Foobar' }
+
+        it { should_not report_lint }
+      end
+
+      context 'element with html entities' do
+        let(:slim) { 'div &mdash;' }
+
+        it { should_not report_lint }
+      end
+
+      context 'element with other characters' do
+        let(:slim) { 'div +' }
+
+        it { should_not report_lint }
+      end
+
+      context 'element with a class shortcut' do
+        let(:slim) { '  div.foo' }
+
+        it { should_not report_lint }
+      end
+
+      context 'element with an id shortcut' do
+        let(:slim) { 'div#bar' }
+
+        it { should_not report_lint }
+      end
+
+      context 'element with both class and id shortcuts' do
+        let(:slim) { '  div#foo.bar' }
+
+        it { should_not report_lint }
+      end
+
+      context 'only class shortcut' do
+        let(:slim) { '.foo' }
+
+        it { should_not report_lint }
+      end
+
+      context 'only id shortcut' do
+        let(:slim) { '  #bar' }
+
+        it { should_not report_lint }
+      end
+
+      context 'id and class shortcut' do
+        let(:slim) { '#bar.foo' }
+
+        it { should_not report_lint }
+      end
+
+      context 'multiple class shortcuts' do
+        let(:slim) { '.foo.bar' }
+
+        it { should_not report_lint }
+      end
+
+      context 'control code' do
+        let(:slim) { '- if foobar' }
+
+        it { should_not report_lint }
+      end
+
+      context 'output only' do
+        let(:slim) { '= "Foobar"' }
+
+        it { should_not report_lint }
+      end
+
+      context 'output after element' do
+        let(:slim) { 'div.foo= "Foobar"' }
+
+        it { should_not report_lint }
+      end
+
     end
 
-    context 'element with a class shortcut' do
-      let(:slim) { '  div.foo' }
+    context "when config style is 'round'" do
 
-      it { should_not report_lint }
-    end
+      let(:config) do
+        SlimLint::ConfigurationLoader.load_hash({
+          'linters' => {
+            'AttributesWrapper' => {
+              'enabled' => true,
+              'style' => 'round'
+            }
+          }
+        }).for_linter(described_class)
+      end
 
-    context 'element with an id shortcut' do
-      let(:slim) { 'div#bar' }
+      context 'element only' do
+        let(:slim) { 'div' }
 
-      it { should_not report_lint }
-    end
+        it { should_not report_lint }
+      end
 
-    context 'element with both class and id shortcuts' do
-      let(:slim) { '  div#foo.bar' }
+      context 'element with text' do
+        let(:slim) { 'div Foobar' }
 
-      it { should_not report_lint }
-    end
+        it { should_not report_lint }
+      end
 
-    context 'only class shortcut' do
-      let(:slim) { '.foo' }
+      context 'element with html entities' do
+        let(:slim) { 'div &mdash;' }
 
-      it { should_not report_lint }
-    end
+        it { should_not report_lint }
+      end
 
-    context 'only id shortcut' do
-      let(:slim) { '  #bar' }
+      context 'element with other characters' do
+        let(:slim) { 'div +' }
 
-      it { should_not report_lint }
-    end
+        it { should_not report_lint }
+      end
 
-    context 'id and class shortcut' do
-      let(:slim) { '#bar.foo' }
+      context 'element with a class shortcut' do
+        let(:slim) { '  div.foo' }
 
-      it { should_not report_lint }
-    end
+        it { should_not report_lint }
+      end
 
-    context 'multiple class shortcuts' do
-      let(:slim) { '.foo.bar' }
+      context 'element with an id shortcut' do
+        let(:slim) { 'div#bar' }
 
-      it { should_not report_lint }
-    end
+        it { should_not report_lint }
+      end
 
-    context 'control code' do
-      let(:slim) { '- if foobar' }
+      context 'element with both class and id shortcuts' do
+        let(:slim) { '  div#foo.bar' }
 
-      it { should_not report_lint }
-    end
+        it { should_not report_lint }
+      end
 
-    context 'output only' do
-      let(:slim) { '= "Foobar"' }
+      context 'only class shortcut' do
+        let(:slim) { '.foo' }
 
-      it { should_not report_lint }
-    end
+        it { should_not report_lint }
+      end
 
-    context 'output after element' do
-      let(:slim) { 'div.foo= "Foobar"' }
+      context 'only id shortcut' do
+        let(:slim) { '  #bar' }
 
-      it { should_not report_lint }
+        it { should_not report_lint }
+      end
+
+      context 'id and class shortcut' do
+        let(:slim) { '#bar.foo' }
+
+        it { should_not report_lint }
+      end
+
+      context 'multiple class shortcuts' do
+        let(:slim) { '.foo.bar' }
+
+        it { should_not report_lint }
+      end
+
+      context 'control code' do
+        let(:slim) { '- if foobar' }
+
+        it { should_not report_lint }
+      end
+
+      context 'output only' do
+        let(:slim) { '= "Foobar"' }
+
+        it { should_not report_lint }
+      end
+
+      context 'output after element' do
+        let(:slim) { 'div.foo= "Foobar"' }
+
+        it { should_not report_lint }
+      end
+
     end
 
   end
