@@ -2,6 +2,7 @@
 
 Below is a list of linters supported by `slim-lint`, ordered alphabetically.
 
+* [AttributesWrapper](#attributeswrapper)
 * [CommentControlStatement](#commentcontrolstatement)
 * [ConsecutiveControlStatements](#consecutivecontrolstatements)
 * [EmptyControlStatement](#emptycontrolstatement)
@@ -12,6 +13,91 @@ Below is a list of linters supported by `slim-lint`, ordered alphabetically.
 * [Tab](#tab)
 * [TagCase](#tagcase)
 * [TrailingWhitespace](#trailingwhitespace)
+
+## AttributesWrapper
+
+Option  | Description
+--------|----------------------------------------------------------------------
+`style` | Can be one of `none,any,round,curly,square` See below for settings.
+
+Enforces a single attribute [wrapper style](https://www.rubydoc.info/gems/slim/frames#Attributes_wrapper) (or none at all).
+
+```yaml
+linters:
+  AttributesWrapper:
+    enforced: true
+    style: none
+```
+
+When `style: none`:
+
+**Bad**
+```slim
+body(data-attribute="foo")
+body{data-attribute="foo"}
+body[data-attribute="foo"]
+```
+
+**Good**
+```slim
+body data-attribute="foo"
+```
+
+When `style: any`:
+
+**Bad**
+```slim
+body data-attribute="foo"
+```
+
+**Good**
+```slim
+body(data-attribute="foo")
+body[data-attribute="foo"]
+body{data-attribute="foo"}
+```
+
+When `style: round`:
+
+**Bad**
+```slim
+body data-attribute="foo"
+body[data-attribute="foo"]
+body{data-attribute="foo"}
+```
+
+**Good**
+```slim
+body(data-attribute="foo")
+```
+
+When `style: curly`:
+
+**Bad**
+```slim
+body data-attribute="foo"
+body[data-attribute="foo"]
+body(data-attribute="foo")
+```
+
+**Good**
+```slim
+body{data-attribute="foo"}
+```
+
+When `style: square`:
+
+**Bad**
+```slim
+body data-attribute="foo"
+body(data-attribute="foo")
+body{data-attribute="foo"}
+```
+
+**Good**
+```slim
+body[data-attribute="foo"]
+```
 
 ## CommentControlStatement
 
