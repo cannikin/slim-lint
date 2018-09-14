@@ -8,6 +8,11 @@
 skip_frontmatter: false
 
 linters:
+  AttributesWrapper:
+    enabled: true
+    # Can be one of: none|any|round|square|curly, defaults to `none`
+    style: none
+
   CommentControlStatement:
     enabled: true
 
