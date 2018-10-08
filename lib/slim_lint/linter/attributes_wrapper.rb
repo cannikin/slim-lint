@@ -16,38 +16,22 @@ module SlimLint
     WRAPPER_ANY = '.*'
     WRAPPER_END = '.*\z'
     ATTRIBUTES_REGEX = Regexp.new(WRAPPER_START + '( .*?=|\(|\{|\[).+')
-    DOCTYPE_REGEX = Regexp.new '\Adoctype'
 
-    on [:html, :attr] do |sexp|
+    on [:html, :tag, anything,
+         [:html, :attrs]] do |sexp|
       style = config.fetch('style', 'none').to_sym
-      line = document.source_lines[sexp.line - 1]
+      line = document.source_lines[sexp.line - 1].chomp
 
-      # ignore attribute shortcuts
-      next if (sexp[2] == 'class' or sexp[2] == 'id') and sexp[3][0] == :static
+      non_static_attributes = sexp[3].collect do |attr|
+        attr if attr.is_a? SlimLint::Sexp and attr[3][0] != :static
+      end.compact
+
+      # ignore the line if all attributes are static
+      next if non_static_attributes.empty?
       # regex for line containing attributes wrapper or not
       next if line =~ line_regex(style)
 
       report_lint(sexp, message(style))
-      # # line must contain at least one attribute to be considered
-      # puts "-" * 80
-      # puts "Line #{sexp.line}: #{document.source_lines[sexp.line - 1]}"
-      # puts sexp.inspect
-    end
-
-    on_start do |_sexp|
-      style = config.fetch('style', 'none').to_sym
-      dummy_node = Struct.new(:line)
-
-      document.source_lines.each_with_index do |line, index|
-        # whether the line contains any attributes at all
-        next unless line =~ ATTRIBUTES_REGEX
-        # doctype declarations cannot use parenthesis
-        next if line =~ DOCTYPE_REGEX
-        # actual check for attributes wrapper
-        next if line =~ line_regex(style)
-
-        report_lint(dummy_node.new(index + 1), message(style))
-      end
     end
 
     private
